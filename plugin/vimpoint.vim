@@ -1090,6 +1090,7 @@ function! s:create_vpa_html (slidenum, pres, slide)
     endif
 
     " Content...
+    let html += [ '<ul>' ]
     let [in_bullet, in_codeblock] = [0,0]
     for content in a:slide.content
         if content =~ '^\S'
@@ -1100,7 +1101,7 @@ function! s:create_vpa_html (slidenum, pres, slide)
             let [in_bullet, in_codeblock] = [1,0]
             let html += [ '<li class="VimpointSlideBullet">' ]
         elseif content !~ '\S'
-            let html += in_bullet ? [ "</li>" ] : []
+            " let html += in_bullet ? [ "</li>" ] : []
             let in_bullet = 0
         endif
 
@@ -1117,8 +1118,9 @@ function! s:create_vpa_html (slidenum, pres, slide)
 
     let html +=
     \   in_codeblock ? [ '</code>' ]
-    \ : in_bullet    ? [ '</li>'  ]
     \ :                []
+    "\ : in_bullet    ? [ '</li>'  ]
+    let html += [ '</ul>' ]
 
     return html
 endfunction
@@ -2218,6 +2220,8 @@ endfunction
 
 function! s:html_static_header (title)
     return [
+    \       '<!DOCTYPE html>',
+    \       '<html lang="es">',
     \       '<head>',
     \       '<title>' . a:title . '</title>',
     \       '<style type="text/css">',
