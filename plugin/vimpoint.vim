@@ -978,24 +978,24 @@ function! s:create_vpf_html (slidenum, pres, slide) abort
     let html = []
 
     " Title line(s)...
-    let html += ['<p  class="VimpointPresTitle">']
+    let html += ['<div  class="VimpointPresTitle">']
     for title in a:pres.title
         let html += [ s:format_html(title, {}) . s:BR ]
     endfor
-    let html += ['</p>']
+    let html += ['</div>']
 
     " Presenter name line(s)...
-    let html += ['<p class="VimpointPresName">']
+    let html += ['<div class="VimpointPresName">']
     for presenter in a:pres.presenter
         let html += [ s:format_html(presenter, {}) . s:BR ]
     endfor
-    let html += ['</p>']
+    let html += ['</div>']
 
-    let html += ['<p class="VimpointPresInfo">']
+    let html += ['<div class="VimpointPresInfo">']
     for info in a:pres.info
         let html += [ s:format_html(info, {}) . s:BR ]
     endfor
-    let html += ['</p>']
+    let html += ['</div>']
 
     return html
 endfunction
@@ -1094,7 +1094,7 @@ function! s:create_vpa_html (slidenum, pres, slide)
         if content =~ '^\S'
             let content = substitute(content, '^\S', "", "")
             if in_codeblock
-                let html += [ '</p>' ]
+                let html += [ '</code>' ]
             endif
             let [in_bullet, in_codeblock] = [1,0]
             let html += [ '<li class="VimpointSlideBullet">' ]
@@ -2221,51 +2221,51 @@ function! s:html_static_header (title)
     \       '<title>' . a:title . '</title>',
     \       '<style type="text/css">',
     \       '<!--',
-    \       'p {',
-    \       '    margin: 0pt ;',
+    \       '* {',
+    \       '    margin: 0;',
     \       '}',
-    \       'p.VimpointPresTitle {',
+    \       '.VimpointPresTitle {',
     \       '    font-family:    Times  ;',
     \       '    font-size:      18pt   ;',
     \       '    font-style:     bold   ;',
     \       '    text-align:     center ;',
     \       '    margin-bottom:  24pt   ;',
     \       '}',
-    \       'p.VimpointPresName {',
+    \       '.VimpointPresName {',
     \       '    font-family:    Times  ;',
     \       '    font-size:      15pt   ;',
     \       '    font-style:     bold   ;',
     \       '    text-align:     center ;',
     \       '    margin-bottom:  18pt   ;',
     \       '}',
-    \       'p.VimpointPresInfo {',
+    \       '.VimpointPresInfo {',
     \       '    font-family:    Times  ;',
     \       '    font-size:      13pt   ;',
     \       '    font-style:     normal ;',
     \       '    text-align:     center ;',
     \       '    margin-bottom:  36pt   ;',
     \       '}',
-    \       'p.VimpointSectionTitle {',
+    \       '.VimpointSectionTitle {',
     \       '    font-family:    Times  ;',
     \       '    font-size:      18pt   ;',
     \       '    font-weight:    bold   ;',
     \       '    margin-top:     36pt   ;',
     \       '    margin-bottom:  0pt    ;',
     \       '}',
-    \       'p.VimpointSlideTitle {',
+    \       '.VimpointSlideTitle {',
     \       '    font-family:    Times  ;',
     \       '    font-size:      16pt   ;',
     \       '    font-weight:    bold   ;',
     \       '    margin-top:     36pt   ;',
     \       '    margin-bottom:  0pt    ;',
     \       '}',
-    \       'li.VimpointSlideBullet {',
+    \       '.VimpointSlideBullet {',
     \       '    font-family:    Times  ;',
     \       '    font-size:      12pt   ;',
     \       '    font-weight:    normal ;',
     \       '    margin-top:     8pt    ;',
     \       '}',
-    \       'p.VimpointSlideCodeBlock {',
+    \       '.VimpointSlideCodeBlock {',
     \       '    white-space:    pre     ;',
     \       '    font-family:    Courier ;',
     \       '    font-size:      11pt    ;',
@@ -2274,7 +2274,7 @@ function! s:html_static_header (title)
     \       '    margin-top:     8pt     ;',
     \       '    margin-left:    1cm     ;',
     \       '}',
-    \       'p.VimpointExample {',
+    \       '.VimpointExample {',
     \       '    border:         medium double ;',
     \       '    white-space:    pre           ;',
     \       '    font-family:    Courier       ;',
@@ -2283,20 +2283,20 @@ function! s:html_static_header (title)
     \       '    line-height:    13pt          ; ',
     \       '    padding:        0.5cm 1cm     ;',
     \       '}',
-    \       'p.VimpointExampleCaption {',
+    \       '.VimpointExampleCaption {',
     \       '    font-family:    Helvetica  ;',
     \       '    font-size:      16pt       ;',
     \       '    font-weight:    bold       ;',
     \       '    margin-top:     36pt       ;',
     \       '    margin-bottom:  0pt        ;',
     \       '}',
-    \       'span.VimpointEmph {',
+    \       '.VimpointEmph {',
     \       '    font-style:     italic     ;',
     \       '}',
-    \       'span.VimpointCodeBlockEmph {',
+    \       '.VimpointCodeBlockEmph {',
     \       '    font-weight:    bold       ;',
     \       '}',
-    \       'span.VimpointCode {',
+    \       '.VimpointCode {',
     \       '    font-family:    Courier    ;',
     \       '}',
     \       '-->',
