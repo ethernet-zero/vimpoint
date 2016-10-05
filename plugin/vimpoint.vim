@@ -2368,18 +2368,18 @@ function! VimpointIntermissionTimer (duration)
             " Select appropriate message and pause, depending on time remaining
             if countdown > 60
                 let mins = (countdown+30) / 60
-                let msg = 'will resume in about ' . (mins != 1 ? mins : 'a')
-                           \ . ' minute' . (mins != 1 ? 's' : "")
+                let msg = 'volvemos en alrededor de ' . (mins != 1 ? mins : 'un')
+                           \ . ' minuto' . (mins != 1 ? 's' : "")
             elseif countdown > 0
                 let secs = countdown
-                let msg = 'will resume in ' . secs
-                          \ . ' second' . (secs != 1 ? 's' : "")
+                let msg = 'volvemos en ' . secs
+                          \ . ' segundo' . (secs != 1 ? 's' : "")
             elseif countdown > -30
-                let msg = 'will resume now'
+                let msg = 'volvemos ya'
             elseif countdown > -200
-                let msg = 'will resume any minute now'
+                let msg = 'volvemos en cualquier momento'
             else
-                let msg = 'should resume shortly'
+                let msg = 'enseguida volvemos'
             endif
 
             " Display message
@@ -2396,7 +2396,7 @@ function! VimpointIntermissionTimer (duration)
     catch /^Vim:Interrupt$/
     finally
         call setline(g:Vimpoint_INTERMISSION_TITLE_ROW+2,
-                    \s:create_centred_on_title(title_row, 'will resume now'))
+                    \s:create_centred_on_title(title_row, 'volvemos ya'))
         call s:trim_right_edge()
         redraw
     endtry
