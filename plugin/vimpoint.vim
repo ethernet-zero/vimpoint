@@ -1021,18 +1021,18 @@ function! s:create_vpe_html (slidenum, pres, slide)
     " Format caption (if any)...
     if exists('a:slide.title')
         let html +=  [
-        \   '<p  class="VimpointExampleCaption">',
+        \   '<div  class="VimpointExampleCaption">',
         \   a:slide.title[0],
-        \   '</p>'
+        \   '</div>'
         \]
     endif
 
     " Format content...
-    let html += [ '<p class="VimpointExample">' ]
+    let html += [ '<code class="VimpointExample">' ]
     for line in lines
         let html += [ s:format_html(line, { 'codeblock': 1}) ]
     endfor
-    let html += [ '</p>' ]
+    let html += [ '</code>' ]
 
     return html
 endfunction
@@ -1061,16 +1061,16 @@ function! s:create_vpd_html (slidenum, pres, slide)
 
     " Format content...
     let html = [
-    \   '<p  class="VimpointExampleCaption">',
+    \   '<div  class="VimpointExampleCaption">',
     \   a:slide.source,
-    \   '</p>',
-    \   '<p class="VimpointExample">',
+    \   '</div>',
+    \   '<code class="VimpointExample">',
     \]
 
     for line in lines
         let html += [ s:format_html(line, { 'literal': 1}) ]
     endfor
-    let html += [ '</p>' ]
+    let html += [ '</code>' ]
 
     return html
 endfunction
@@ -1081,11 +1081,11 @@ function! s:create_vpa_html (slidenum, pres, slide)
 
     " Title line(s)...
     if a:pres.prev_title != a:slide.title
-        let html += [ '<p  class="VimpointSlideTitle">' ]
+        let html += [ '<h2  class="VimpointSlideTitle">' ]
         for title in a:slide.title
             let html += [ s:format_html(title, {}) ]
         endfor
-        let html += [ '</p>' ]
+        let html += [ '</h2>' ]
     endif
 
     " Content...
@@ -1105,7 +1105,7 @@ function! s:create_vpa_html (slidenum, pres, slide)
 
         if !in_codeblock && !in_bullet && content =~ '^\s'
             let in_codeblock = 1
-            let html += [ '<p class="VimpointSlideCodeBlock">' ]
+            let html += [ '<code class="VimpointSlideCodeBlock">' ]
         endif
 
         let html += [
@@ -1115,7 +1115,7 @@ function! s:create_vpa_html (slidenum, pres, slide)
     endfor
 
     let html +=
-    \   in_codeblock ? [ '</p>' ]
+    \   in_codeblock ? [ '</code>' ]
     \ : in_bullet    ? [ '</li>'  ]
     \ :                []
 
@@ -1129,11 +1129,11 @@ function! s:create_vps_html (slidenum, pres, slide)
 
     " Title line(s)...
     if a:pres.prev_title != a:slide.title
-        let html += [ '<p  class="VimpointSectionTitle">' ]
+        let html += [ '<h1  class="VimpointSectionTitle">' ]
         for title in a:slide.title
             let html += [ s:format_html(title, {}) ]
         endfor
-        let html += [ '</p>' ]
+        let html += [ '</h1>' ]
     endif
 
     return html
