@@ -15,6 +15,12 @@ syntax case ignore
 syntax sync fromstart
 set nowrap
 
+set nonumber
+set laststatus=0
+set cmdheight=2
+set nolist
+set colorcolumn=0
+set nocursorline
 
 highlight   VPAInverse       ctermfg=white      ctermbg=black
 highlight   VPABackground    ctermfg=white      ctermbg=white

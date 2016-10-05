@@ -11,6 +11,13 @@ elseif exists("b:current_syntax")
   finish
 endif
 
+set nonumber
+set laststatus=0
+set cmdheight=2
+set nolist
+set colorcolumn=0
+set nocursorline
+
 syntax case ignore
 
 highlight   VPEText     ctermfg=white      ctermbg=black 

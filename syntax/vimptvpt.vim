@@ -16,6 +16,13 @@ syntax case ignore
 syntax sync fromstart
 set nowrap
 
+set nonumber
+set laststatus=0
+set cmdheight=2
+set nolist
+set colorcolumn=0
+set nocursorline
+
 
 highlight   VPTBulletPoint       ctermfg=yellow   cterm=bold
 highlight   VPTSlidesOnly        ctermfg=black    ctermbg=green    cterm=bold
