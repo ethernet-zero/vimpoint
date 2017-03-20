@@ -57,8 +57,8 @@ endfunction
 
 "=====[ CONSTANTS ]==========================================================
 
-let g:Vimpoint_DEFAULT_ROWS = 24
-let g:Vimpoint_DEFAULT_COLS = 76
+let g:Vimpoint_DEFAULT_ROWS = &lines
+let g:Vimpoint_DEFAULT_COLS = &columns
 let g:Vimpoint_LEFT_MARGIN  = 3
 
 let g:Vimpoint_UNDERLINE_DELIM = 'º'
