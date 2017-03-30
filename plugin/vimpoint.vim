@@ -358,7 +358,7 @@ function! VimpointSlideSetup (filetype)
         nnoremap <buffer><silent> <LEFT>  :quit!<CR>
         nnoremap <buffer><silent> <RIGHT> :quit!<CR>
         nnoremap <buffer><silent> <SPACE> :quit!<CR>
-        nunmap                    ZZ
+        silent! nunmap                    ZZ
     else
         nnoremap <buffer><silent>  ZZ  :call VimpointConfirmQuit()<CR>
         nnoremap <buffer><silent>  <TAB>
