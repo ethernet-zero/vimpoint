@@ -141,16 +141,6 @@ au!
 
 augroup END
 
-function! s:strlenw(src)
-    return strlen(substitute(a:src, '.', 'x', 'g'))
-endfunction
-
-function! s:strpartw(src, start, ...)
-    return a:0 ?
-        \ join(split(a:src, '.\zs')[a:start : (a:start + a:1 - 1)], '') :
-        \ join(split(a:src, '.\zs')[a:start :], '')
-endfunction
-
 " Decode b:vpt.formatting data into syntax regexes...
 function! s:build_page_specific_syntax (category, formatting)
     let syntax_pat = {}
@@ -183,7 +173,7 @@ function! s:build_page_specific_syntax (category, formatting)
         let startpos = join(syntax_pat[group].start, '\|')
         let endpos   = join(syntax_pat[group].end,   '\|')
         let onepos   = join(syntax_pat[group].one,   '\|')
-        if s:strlenw(startpos) && s:strlenw(endpos)
+        if strlen(startpos) && strlen(endpos)
             let syntaxes += [
             \   'syntax region ' . groupname
             \ . ' start=/' . startpos . '/'
@@ -191,7 +181,7 @@ function! s:build_page_specific_syntax (category, formatting)
             \ . ( groupname == 'CodeEmph' ? 'containedin=ALL' : "")
             \ ]
         endif
-        if s:strlenw(onepos)
+        if strlen(onepos)
             let syntaxes += [
             \   'syntax match ' . groupname . 'One'
             \ . ' /' . onepos . '/'
@@ -261,7 +251,7 @@ function! VimpointGetFoldText()
     " Build fold text...
     let linecount = string(v:foldend - v:foldstart + 1)
     let line = substitute(getline(v:foldstart),'\s\+$',"","")
-    let midgap = winwidth(0) - s:strlenw(line) - s:strlenw(linecount) - 6
+    let midgap = winwidth(0) - strlen(line) - strlen(linecount) - 6
     return printf("%s%*s%s lines", line, midgap, "", linecount)
 endfunction
 
@@ -320,7 +310,7 @@ function! VimpointSlideSetup (filetype)
     syntax enable
     execute 'set syntax=vimpt' . a:filetype
     execute 'set fileencoding=utf-8'
-    execute 'set bg=light | highlight Normal ctermbg=White ctermfg=Black'
+    execute 'set bg=light | highlight Normal ctermbg=White ctermfg=Black'	
 
     " Notify general colourscheme hint...
     let b:prev_background = &background
@@ -624,7 +614,7 @@ endfunction
 
 function! s:centre_text (text, ...)
     let width = a:0 ? a:1 : g:Vimpoint_DEFAULT_COLS
-    let indent = (width - s:strlenw(a:text))/2
+    let indent = (width - strlen(a:text))/2
     return printf("%-*s", width, repeat(' ',indent) . a:text)
 endfunction
 
@@ -649,7 +639,7 @@ function! s:create_centred_on_title (title_line, text)
     let title_end    = match(a:title_line, '\s*$')
     let title_centre = (title_start + title_end)/2
 
-    let indent = title_centre - s:strlenw(a:text)/2
+    let indent = title_centre - strlen(a:text)/2
     return printf("%-*s", g:Vimpoint_DEFAULT_COLS, repeat(' ',indent) . a:text)
 endfunction
 
@@ -751,7 +741,7 @@ function! s:create_vpi_file (slidenum, pres, slide, currdir) abort
     call map(title_lines,
     \        "s:deformat(s:trim_text(v:val), 0, {'centred':1,'category':'Title'})[0]"
     \)
-    let title_len   = max(map(copy(title_lines), "s:strlenw(v:val)"))
+    let title_len   = max(map(copy(title_lines), 'strlen(v:val)'))
     let title_start = max([
         \ g:Vimpoint_MIN_UNDERLINE_WIDTH,
         \ g:Vimpoint_DEFAULT_COLS - g:Vimpoint_MIN_UNDERLINE_WIDTH - title_len
@@ -808,7 +798,7 @@ function! s:create_vpe_file (slidenum, pres, slide, currdir)
 
     " Left-justify according to first line...
     let leader_len = matchend(lines[0], '^\s\+')
-    call map(lines, 's:strpartw(v:val,'.leader_len.')' )
+    call map(lines, 'strpart(v:val,'.leader_len.')' )
 
     " Generate filename and write the file...
     let filename = printf('%0*d._EXAMPLE.vpe',
@@ -1028,7 +1018,7 @@ function! s:create_vpe_html (slidenum, pres, slide)
 
     " Left-justify according to first line...
     let leader_len = matchend(lines[0], '^\s\+')
-    call map(lines, 's:strpartw(v:val,'.leader_len.')' )
+    call map(lines, 'strpart(v:val,'.leader_len.')' )
 
     " Format content...
     let html += [ '<code class="VimpointExample">' ]
@@ -1191,7 +1181,7 @@ function! s:deformat (text, row, opt)
     let still_to_search = a:text
     let deformatted_text = ""
     while 1
-        let startpos = s:strlenw(deformatted_text)
+        let startpos = strlen(deformatted_text)
         let matched = matchlist(still_to_search, s:FORMATTER_PAT)
         if empty(matched)
             let deformatted_text .= still_to_search
@@ -1219,21 +1209,21 @@ function! s:deformat (text, row, opt)
             " Singleton codeemph characters must remember the character...
             let deformatted_text .= prefix . delim[-5:-5]
             let offset += 8
-            let one[codeemph] += [ s:strlenw(deformatted_text) ]
+            let one[codeemph] += [ strlen(deformatted_text) ]
             continue
 
         elseif delim =~ s:CODE_ONE_PAT
             " Singleton code characters must remember the character...
             let deformatted_text .= prefix . delim[-3:-3]
             let offset += 4
-            let one[in_emph ? codeemph : code] += [ s:strlenw(deformatted_text) ]
+            let one[in_emph ? codeemph : code] += [ strlen(deformatted_text) ]
             continue
 
         elseif delim =~ s:EMPH_ONE_PAT
             if in_emph
                 " Special 'off.on' case...
                 let deformatted_text .= prefix . delim[-3:-3]
-                let delim_startpos = s:strlenw(deformatted_text)
+                let delim_startpos = strlen(deformatted_text)
                 let offset += 4
                 let end[in_code ? codeemph : emph]   += [ delim_startpos-1 ]
                 let start[in_code ? codeemph : emph] += [ delim_startpos+1 ]
@@ -1242,15 +1232,15 @@ function! s:deformat (text, row, opt)
                 " Singleton emph characters must remember the character...
                 let deformatted_text .= prefix . delim[-3:-3]
                 let offset += 4
-                let one[in_code ? codeemph : emph] += [ s:strlenw(deformatted_text) ]
+                let one[in_code ? codeemph : emph] += [ strlen(deformatted_text) ]
             endif
             continue
 
         else
             " Otherwise it's a formatting delimiter, so remove it...
             let deformatted_text .= prefix
-            let delim_startpos = s:strlenw(deformatted_text)
-            let offset += s:strlenw(deformatted_text)
+            let delim_startpos = strlen(deformatted_text)
+            let offset += strlen(delim)
         endif
 
         " And remember it...
@@ -1467,7 +1457,7 @@ let s:BUILD_HTML = {
 
 
 function! s:run (duration, ...)
-    let offset = a:0 && s:strlenw(a:1) ? line('.') - 1 : 0
+    let offset = a:0 && strlen(a:1) ? line('.') - 1 : 0
 
     " If duration specified, convert from minutes to seconds...
     if a:duration
@@ -1517,7 +1507,7 @@ endfunction
 function! s:intermit (duration, ...)
 
     " Decode the requested duration and convert to seconds...
-    let offset = a:0 && s:strlenw(a:1) ? line('.') - 1 : 0
+    let offset = a:0 && strlen(a:1) ? line('.') - 1 : 0
     let duration = a:duration - offset
     let duration = duration > 0 ? duration * 60 : ""
 
@@ -1594,7 +1584,7 @@ function! VimpointFindTarget (show_what)
     let currdir      = expand('%:p:h')
     let currfiletype = expand('%:e')
     let currfile     = expand('%:t')
-    let currslidenum = s:strpartw(currfile,0,g:Vimpoint_SLIDE_NUMBER_SIZE)
+    let currslidenum = strpart(currfile,0,g:Vimpoint_SLIDE_NUMBER_SIZE)
 
     " Find all targets
     let target_names  = []
@@ -1615,7 +1605,7 @@ function! VimpointFindTarget (show_what)
 
     " Sort target names by their slide position in the presentation...
     call sort(target_names)
-    call map(target_names, 's:strpartw(v:val,g:Vimpoint_SLIDE_NUMBER_SIZE+1)')
+    call map(target_names, 'strpart(v:val,g:Vimpoint_SLIDE_NUMBER_SIZE+1)')
 
     " If appropriate, remove any slides before the current slide...
     if a:show_what == 'next'
@@ -1966,7 +1956,7 @@ function! s:build_docmodel (...)
 
         " Locate a =link
         elseif line =~ s:LINK_PAT
-            let link_name = s:trim_text(s:strpartw(line,matchend(line,s:LINK_PAT)))
+            let link_name = s:trim_text(strpart(line,matchend(line,s:LINK_PAT)))
             let docmodel[-1].context.links[link_name] = 1
 
             " Track multiline status...
@@ -1976,7 +1966,7 @@ function! s:build_docmodel (...)
         " Locate a =target
         elseif line =~ s:TARGET_PAT
             let target_name
-            \   = s:trim_text(s:strpartw(line,matchend(line,s:TARGET_PAT)))
+            \   = s:trim_text(strpart(line,matchend(line,s:TARGET_PAT)))
             let docmodel[-1].context.targets[target_name] = 1
             let s:all_targets[target_name]
             \   = printf('%0*d', g:Vimpoint_SLIDE_NUMBER_SIZE, len(docmodel)-1)
@@ -1988,7 +1978,7 @@ function! s:build_docmodel (...)
         " Locate an =active with filename
         elseif line =~ s:ACTIVE_FILE_PAT
             let active_source
-            \   = s:trim_text(s:strpartw(line,s:strlenw(s:ACTIVE_PAT)-1))
+            \   = s:trim_text(strpart(line,strlen(s:ACTIVE_PAT)-1))
             let docmodel += [{
             \   'type':      'vpd',
             \   'source':    active_source,
@@ -2012,7 +2002,7 @@ function! s:build_docmodel (...)
         " Locate an =example with filename
         elseif line =~ s:EXAMPLE_FILE_PAT
             let example_source
-            \   = s:trim_text(s:strpartw(line,s:strlenw(s:EXAMPLE_PAT)-1))
+            \   = s:trim_text(strpart(line,strlen(s:EXAMPLE_PAT)-1))
             let docmodel += [{
             \   'type':     'vpd',
             \   'source':   example_source,
@@ -2056,7 +2046,7 @@ function! s:build_docmodel (...)
         elseif line =~ s:INTERMISSION_PAT
             let docmodel += [{
             \   'type':     'vpi',
-            \   'duration': s:strpartw(line,s:strlenw(s:INTERMISSION_PAT)-1),
+            \   'duration': strpart(line,strlen(s:INTERMISSION_PAT)-1),
             \   'context':  deepcopy(context),
             \   'first':    1,
             \   'content':  [],
@@ -2083,7 +2073,7 @@ function! s:build_docmodel (...)
             let docmodel[-1].title += [line]
 
         " Or more metainformation (title, presenter, or info)
-        elseif s:strlenw(in_metainfo)
+        elseif strlen(in_metainfo)
             let pres[in_metainfo] += [line]
 
         " Or post-directive noise or whitespace...
